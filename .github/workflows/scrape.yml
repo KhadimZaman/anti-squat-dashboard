@@ -1,13 +1,16 @@
 name: Scrape Certified Companies
 
 on:
-  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
   schedule:
-    - cron: '0 8 * * *' # Runs at 8:00 AM UTC every day
+    - cron: '0 8 * * *'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:      # This is the new block we are adding
+      contents: write # This gives the job permission to commit files
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -25,7 +28,7 @@ jobs:
       - name: Run scraper and build page
         run: python scraper.py
 
-      - name: List files in directory # This is the new debugging step
+      - name: List files in directory
         run: ls -l
 
       - name: Commit and push changes
