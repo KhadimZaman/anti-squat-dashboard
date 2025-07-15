@@ -20,13 +20,21 @@ KLB_URL = "https://keurmerkleegstandbeheer.nl/gecertificeerden/"
 def get_current_companies():
     """
     Scrapes the live list of companies using a headless Chrome browser
-    to handle JavaScript rendering.
+    with anti-bot-detection evasion techniques.
     """
-    print("Setting up headless Chrome browser...")
+    print("Setting up headless Chrome browser in evasion mode...")
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--window-size=1920,1080")
+    
+    # --- Anti-Bot Evasion Options ---
+    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+    chrome_options.add_argument(f"user-agent={user_agent}")
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option('useAutomationExtension', False)
     
     driver = None
     try:
@@ -34,20 +42,19 @@ def get_current_companies():
         print(f"Fetching {KLB_URL}...")
         driver.get(KLB_URL)
 
-        # Wait up to 15 seconds for the company listings to be loaded by JavaScript
+        # Wait up to 30 seconds for the company listings to load
         print("Waiting for company list to load...")
-        wait = WebDriverWait(driver, 15)
+        wait = WebDriverWait(driver, 30) # Increased wait time
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "jet-listing-grid__item")))
         print("Company list found. Parsing page source...")
 
-        # Get the final page source after JS has run
         html_source = driver.page_source
         soup = bs4.BeautifulSoup(html_source, 'html.parser')
         
         company_blocks = soup.find_all('div', class_='jet-listing-grid__item')
         
         if not company_blocks:
-            print("Warning: No company blocks found even after waiting. The website structure may have changed.")
+            print("Warning: No company blocks found even after waiting. The website's protection is very strong.")
             return None, "stale"
 
         live_companies = {}
