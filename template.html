@@ -12,7 +12,7 @@
             max-width: 1200px; 
             margin: 20px auto; 
             padding: 0 20px; 
-            background-color: #f0f2f5; /* Changed from #f9f9f9 for better contrast */
+            background-color: #f0f2f5; 
         }
         header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
         .status-indicator { font-size: 1.5em; vertical-align: middle; }
@@ -20,7 +20,14 @@
         .stale, .unlisted { color: #888; }
         .accredited { color: #28a745; }
         .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background-color: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .card { 
+            background-color: #fff; 
+            border: 1px solid #e0e0e0; /* A light border for the other sides */
+            border-left: 5px solid #4285F4; /* This is the new blue accent border */
+            border-radius: 8px; 
+            padding: 20px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06); 
+        }
         .card h3 { margin-top: 0; }
         .card p { margin-bottom: 10px; }
         .card a { word-break: break-all; }
