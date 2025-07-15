@@ -17,17 +17,30 @@ def get_current_companies():
         response = requests.get(KLB_URL, headers=headers, timeout=15)
         response.raise_for_status()
         soup = bs4.BeautifulSoup(response.text, 'html.parser')
-        company_blocks = soup.find_all('div', class_='org-item')
         
+        # CORRECTED SELECTOR: The website changed its class name for company blocks.
+        company_blocks = soup.find_all('div', class_='jet-listing-grid__item')
+        
+        if not company_blocks:
+            print("Warning: No company blocks found with the selector. The website structure may have changed again.")
+            return None, "stale"
+
         live_companies = {}
         for block in company_blocks:
-            link_tag = block.find('a')
+            # The link is now the main container for the content
+            link_tag = block.find('a', class_='jet-listing-grid__item-instance')
             img_tag = link_tag.find('img') if link_tag else None
+
             if link_tag and img_tag:
                 website = link_tag.get('href', '').strip()
                 name = img_tag.get('alt', 'Unknown Name').strip()
                 if name and website:
                     live_companies[website] = name
+        
+        if not live_companies:
+             print("Warning: Company blocks were found, but no company data could be extracted.")
+             return None, "stale"
+
         return live_companies, "success"
     except requests.exceptions.RequestException as e:
         print(f"Error fetching KLB website: {e}")
@@ -37,11 +50,18 @@ def load_previous_data():
     """Loads the last known company data from the JSON file."""
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, 'r') as f:
-            return json.load(f)
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return {'companies': {}} # Return empty if file is corrupt
     return {'companies': {}} # Return empty structure if no file
 
 def generate_html(data):
     """Generates the final index.html from the template and data."""
+    if not os.path.exists(TEMPLATE_FILE):
+        print(f"Error: {TEMPLATE_FILE} not found!")
+        return
+        
     with open(TEMPLATE_FILE, 'r') as f:
         template = f.read()
 
@@ -52,26 +72,34 @@ def generate_html(data):
         status_class = "fresh"
         status_text = "Fresh"
         
-    last_update_utc = datetime.fromisoformat(data['last_update_utc'])
-    # Assuming CEST is UTC+2, but for robustness, we'll just show timezone
-    last_update_str = last_update_utc.strftime('%d-%m-%Y %H:%M:%S UTC')
-    status_html = f'<span class="status-indicator {status_class}">●</span> {status_text} (Last updated: {last_update_str})'
+    last_update_utc_str = "Never"
+    if 'last_update_utc' in data:
+        last_update_utc = datetime.fromisoformat(data['last_update_utc'])
+        last_update_utc_str = last_update_utc.strftime('%d-%m-%Y %H:%M:%S UTC')
+
+    status_html = f'<span class="status-indicator {status_class}">●</span> {status_text} (Last updated: {last_update_utc_str})'
     
     # --- Company Cards ---
     cards_html = ""
-    sorted_companies = sorted(data['companies'].values(), key=lambda x: x['name'])
-    
-    for company in sorted_companies:
-        status_dot_class = "accredited" if company['status'] == 'accredited' else "unlisted"
-        status_text_val = "Accredited" if company['status'] == 'accredited' else "Accreditation Lost"
+    # Check if 'companies' key exists and is a dictionary
+    company_dict = data.get('companies', {})
+    if isinstance(company_dict, dict):
+        sorted_companies = sorted(company_dict.values(), key=lambda x: x.get('name', ''))
+        
+        for company in sorted_companies:
+            status_dot_class = "accredited" if company.get('status') == 'accredited' else "unlisted"
+            status_text_val = "Accredited" if company.get('status') == 'accredited' else "Accreditation Lost"
 
-        cards_html += f"""
-        <div class="card">
-            <h3>{company['name']}</h3>
-            <p><span class="status-indicator {status_dot_class}">●</span> {status_text_val}</p>
-            <a href="{company['website']}" target="_blank">{company['website']}</a>
-        </div>
-        """
+            cards_html += f"""
+            <div class="card">
+                <h3>{company.get('name', 'No Name')}</h3>
+                <p><span class="status-indicator {status_dot_class}">●</span> {status_text_val}</p>
+                <a href="{company.get('website', '#')}" target="_blank">{company.get('website', 'No Website')}</a>
+            </div>
+            """
+    
+    if not cards_html:
+        cards_html = "<p>No company data to display. The scraper might need an update.</p>"
 
     # --- Replace placeholders and write file ---
     final_html = template.replace('{{STATUS_HTML}}', status_html)
@@ -103,7 +131,7 @@ def main():
             if website in previous_companies:
                 # Company persists
                 updated_companies[website] = previous_companies[website]
-                updated_companies[website]['status'] = 'accredited' # Ensure it's marked as accredited
+                updated_companies[website]['status'] = 'accredited'
                 updated_companies[website]['name'] = name # Update name in case it changed
             else:
                 # New company found
@@ -117,7 +145,6 @@ def main():
         # Process old companies to find unlisted ones
         for website, data in previous_companies.items():
             if website not in live_companies:
-                # Company was removed from the list
                 unlisted_company = data
                 unlisted_company['status'] = 'unlisted'
                 updated_companies[website] = unlisted_company
@@ -128,7 +155,6 @@ def main():
             'companies': updated_companies
         }
 
-    # Save the updated data and generate the new HTML page
     with open(DATA_FILE, 'w') as f:
         json.dump(final_data, f, indent=4)
         
