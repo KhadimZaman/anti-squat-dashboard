@@ -1,5 +1,126 @@
 {
-    "last_update_utc": "2025-07-15T00:39:02.505874",
-    "update_status": "stale",
-    "companies": {}
+    "last_update_utc": "2025-07-15T00:46:46.106088",
+    "update_status": "success",
+    "companies": {
+        "https://247vastgoedbeheer.nl/": {
+            "name": "24/7 Vastgoedbeheer BV",
+            "website": "https://247vastgoedbeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.5huizenleegstandbeheer.nl/": {
+            "name": "5Huizen Vastgoed & Leegstand Beheer",
+            "website": "https://www.5huizenleegstandbeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.adhocbeheer.nl/": {
+            "name": "Ad Hoc Beheer BV",
+            "website": "https://www.adhocbeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://alvast.nl/": {
+            "name": "Alvast Antikraak BV",
+            "website": "https://alvast.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.bewaaktenbewoond.nl/": {
+            "name": "Bewaakt & Bewoond",
+            "website": "https://www.bewaaktenbewoond.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://dekabath.nl/": {
+            "name": "De Kabath Vastgoedbeheer BV",
+            "website": "https://dekabath.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://vastgoedbeschermer.nl/": {
+            "name": "D\u00e9 Vastgoedbeschermer BV",
+            "website": "https://vastgoedbeschermer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://fimvastgoed.nl/": {
+            "name": "FIM Vastgoed",
+            "website": "https://fimvastgoed.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.gapph.nl/": {
+            "name": "Gapph BV",
+            "website": "https://www.gapph.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://hod.nl/": {
+            "name": "H.O.D. Nederland BV",
+            "website": "https://hod.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://antikraak.nl/": {
+            "name": "Jansen Vastgoedbeheer",
+            "website": "https://antikraak.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://livable.nl/": {
+            "name": "Livable BV",
+            "website": "https://livable.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://maximusbeheer.nl/": {
+            "name": "Maximus Vastgoedbeheer CV",
+            "website": "https://maximusbeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.oakmanagement.nl/": {
+            "name": "OAK Management",
+            "website": "https://www.oakmanagement.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.oranjesteengoed.nl/": {
+            "name": "Oranje Steengoed Beheer BV",
+            "website": "https://www.oranjesteengoed.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://jacobiberg.nl/": {
+            "name": "Popcentrum Jacobiberg",
+            "website": "https://jacobiberg.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.theotherdogs.nl/": {
+            "name": "The Other Dogs BV",
+            "website": "https://www.theotherdogs.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.totalus.nl/": {
+            "name": "Totalus Beheer BV",
+            "website": "https://www.totalus.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://vpsleegstandbeheer.nl/": {
+            "name": "VPS Nederland",
+            "website": "https://vpsleegstandbeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://zwerfkeibeheer.nl/": {
+            "name": "Zwerfkei Bewaring BV",
+            "website": "https://zwerfkeibeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2025-07-15T00:46:46.106088"
+        }
+    }
 }
