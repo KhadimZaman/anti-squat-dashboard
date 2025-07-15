@@ -5,14 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anti-Squat Dashboard</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; max-width: 1200px; margin: 20px auto; padding: 0 20px; background-color: #f9f9f9; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            max-width: 1200px; 
+            margin: 20px auto; 
+            padding: 0 20px; 
+            background-color: #f0f2f5; /* Changed from #f9f9f9 for better contrast */
+        }
         header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 20px; margin-bottom: 20px; }
         .status-indicator { font-size: 1.5em; vertical-align: middle; }
         .fresh { color: #28a745; }
         .stale, .unlisted { color: #888; }
         .accredited { color: #28a745; }
         .container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-        .card { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card { background-color: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
         .card h3 { margin-top: 0; }
         .card p { margin-bottom: 10px; }
         .card a { word-break: break-all; }
@@ -21,7 +29,7 @@
 <body>
     <header>
         <h1>Certified Anti-Squat Organizations</h1>
-        <p><span class="status-indicator fresh">●</span> Fresh (Last updated: 15-07-2025 00:46:46 UTC)</p>
+        <p><span class="status-indicator fresh">●</span> Fresh (Last updated: 15-07-2025 00:54:47 UTC)</p>
     </header>
     <main class="container">
         
