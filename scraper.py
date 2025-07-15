@@ -4,13 +4,6 @@ import json
 import os
 from datetime import datetime
 
-# --- Selenium Imports ---
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 # --- Configuration ---
 DATA_FILE = 'companies.json'
 TEMPLATE_FILE = 'template.html'
@@ -18,58 +11,38 @@ OUTPUT_FILE = 'index.html'
 KLB_URL = "https://keurmerkleegstandbeheer.nl/gecertificeerden/"
 
 def get_current_companies():
-    """
-    Scrapes the live list of companies using a headless Chrome browser
-    with anti-bot-detection evasion techniques.
-    """
-    print("Setting up headless Chrome browser in evasion mode...")
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--window-size=1920,1080")
-    
-    # --- Anti-Bot Evasion Options ---
-    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
-    chrome_options.add_argument(f"user-agent={user_agent}")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option('useAutomationExtension', False)
-    
-    driver = None
+    """Scrapes the live list of companies from the raw HTML."""
+    print(f"Fetching {KLB_URL}...")
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
     try:
-        driver = webdriver.Chrome(options=chrome_options)
-        print(f"Fetching {KLB_URL}...")
-        driver.get(KLB_URL)
+        response = requests.get(KLB_URL, headers=headers, timeout=15)
+        response.raise_for_status()
+        soup = bs4.BeautifulSoup(response.text, 'html.parser')
 
-        # Wait up to 30 seconds for the company listings to load
-        print("Waiting for company list to load...")
-        wait = WebDriverWait(driver, 30) # Increased wait time
-        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "jet-listing-grid__item")))
-        print("Company list found. Parsing page source...")
-
-        html_source = driver.page_source
-        soup = bs4.BeautifulSoup(html_source, 'html.parser')
-        
-        company_blocks = soup.find_all('div', class_='jet-listing-grid__item')
-        
-        if not company_blocks:
-            print("Warning: No company blocks found even after waiting. The website's protection is very strong.")
+        # Find the h2 heading to anchor our search
+        heading = soup.find('h2', string='BEHEERDERS MET HET KEURMERK')
+        if not heading:
+            print("Error: Could not find the main heading 'BEHEERDERS MET HET KEURMERK'.")
             return None, "stale"
 
+        # Find the first <ul> that comes after the heading
+        company_list_ul = heading.find_next('ul')
+        if not company_list_ul:
+            print("Error: Could not find the company list (<ul>) after the heading.")
+            return None, "stale"
+        
         live_companies = {}
-        for block in company_blocks:
-            link_tag = block.find('a', class_='jet-listing-grid__item-instance')
-            img_tag = link_tag.find('img') if link_tag else None
-
-            if link_tag and img_tag:
-                website = link_tag.get('href', '').strip()
-                name = img_tag.get('alt', 'Unknown Name').strip()
+        # Find all list items within that specific list
+        for li in company_list_ul.find_all('li'):
+            link_tag = li.find('a')
+            if link_tag and link_tag.get('href') and not '.pdf' in link_tag.get('href'):
+                website = link_tag.get('href').strip()
+                name = link_tag.text.strip()
                 if name and website:
                     live_companies[website] = name
-        
+
         if not live_companies:
-             print("Warning: Company blocks were found, but no company data could be extracted.")
+             print("Warning: Found the list but could not extract any company data.")
              return None, "stale"
 
         print(f"Successfully scraped {len(live_companies)} companies.")
@@ -78,10 +51,6 @@ def get_current_companies():
     except Exception as e:
         print(f"An error occurred during scraping: {e}")
         return None, "stale"
-    finally:
-        if driver:
-            print("Closing browser.")
-            driver.quit()
 
 def load_previous_data():
     """Loads the last known company data from the JSON file."""
@@ -133,7 +102,7 @@ def generate_html(data):
             """
     
     if not cards_html:
-        cards_html = "<p>No company data to display. The scraper might need an update.</p>"
+        cards_html = "<p>No company data to display.</p>"
 
     final_html = template.replace('{{STATUS_HTML}}', status_html)
     final_html = final_html.replace('{{COMPANY_CARDS}}', cards_html)
