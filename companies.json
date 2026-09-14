@@ -1,5 +1,5 @@
 {
-    "last_update_utc": "2026-09-13T13:01:45.213815",
+    "last_update_utc": "2026-09-14T14:37:34.856309",
     "update_status": "success",
     "companies": {
         "https://247vastgoedbeheer.nl/": {
@@ -103,6 +103,12 @@
             "website": "https://www.theotherdogs.nl/",
             "status": "accredited",
             "first_seen_utc": "2025-07-15T00:46:46.106088"
+        },
+        "https://www.totaal-leegstandsbeheer.nl/": {
+            "name": "Totaal Leegstandsbeheer BV",
+            "website": "https://www.totaal-leegstandsbeheer.nl/",
+            "status": "accredited",
+            "first_seen_utc": "2026-09-14T14:37:34.856309"
         },
         "https://www.totalus.nl/": {
             "name": "Totalus Beheer BV",
